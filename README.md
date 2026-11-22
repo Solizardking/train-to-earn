@@ -76,6 +76,18 @@ The upgraded engine rates **text, images + captions, video, bulk AI training dat
 | `docs/` | Registry spec, Jev-2 spec, protocol + architecture docs |
 | `docs/PROJECT-README.md` | The original project README, preserved |
 
+## 🧩 The ecosystem
+
+Train To Earn is one organ of the Clawd stack — these public repos plug straight into it:
+
+| Repo | Role in the loop |
+|---|---|
+| [solana-clawd-model-kit](https://github.com/Solizardking/solana-clawd-model-kit) | The training-data kit: SFT/CPT JSONL datasets, manifests, processed shards, and quality reports. Rated TrainToEarn data lands here as training corpora; the Hauhau fine-tune trains on it. |
+| [zk-clawd-primitives](https://github.com/Solizardking/zk-clawd-primitives) | The zero-knowledge primitive layer for Solana-native AI models, built on Light Protocol. The registry's proof layer: verifiable training/attestation proofs and the privacy path for shielded submissions. |
+| [solana-clawd-ai-training](https://github.com/Solizardking/solana-clawd-ai-training) | Training lanes + the Solana Model Kit (`doctor` / `init` / `one-shot` / `train`) and the local-ai-onboarding skill — run and personalize the models this registry lists. |
+| [traintoearn-guide](https://github.com/Solizardking/Traintoearn-guide) | The participant guide + campaign docs for earn.onchainai.fund. |
+
+
 ## ✅ Honest status
 
 **Live today:** the TrainToEarn backend rating engine (`/api/jev/rate`), submissions + rewards ledgers, `/api/models/list`, and the earn.onchainai.fund app. **In spec (this repo):** the omnichain manifest + Solana anchoring rollout (Phase 0 = manifests + `registry.json` here; Phase 1 = registry API on the backend; Phase 2 = the anchor program) and the Jev-2 all-forms engine. Nothing here promises earnings — the ledger endpoints are the only source of truth.
