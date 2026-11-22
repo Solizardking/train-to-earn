@@ -68,6 +68,10 @@ import {
   listTopSubmissions,
 } from './submissions.js';
 import { registerPhantomRoutes, phantomConfigured } from './phantomWallet.js';
+import { registerAuthRoutes } from './auth.js';
+import { registerRegistryRoutes } from './registryApi.js';
+import { registerJev2Routes } from './jev2.js';
+import { registerUploadRoutes } from './uploads.js';
 import { getTrainingData } from './trainingData.js';
 import {
   aggregateConsensusRound,
@@ -812,6 +816,14 @@ app.post('/api/solana/rpc', async (req, res) => {
 
 // Phantom Server SDK wallet routes (dormant until PHANTOM_* env vars are set)
 registerPhantomRoutes(app);
+
+// TrainToEarn platform additions: SIWS wallet login, the omnichain model
+// registry (docs/omnichain-registry.md), Jev-2 multimodal rating
+// (docs/jev2-engine.md), and authenticated uploads.
+registerAuthRoutes(app);
+registerRegistryRoutes(app, { pool, isDbConnected: () => dbConnected });
+registerJev2Routes(app, { pool, isDbConnected: () => dbConnected });
+registerUploadRoutes(app, { pool, isDbConnected: () => dbConnected, upload });
 
 // Sovereign Compute Node API endpoints
 

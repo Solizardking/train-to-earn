@@ -15,35 +15,51 @@ import ConsensusTraining from './ConsensusTraining';
 import AgentMint from './AgentMint';
 import OnChainAIStudio from './OnChainAIStudio';
 import TrainingPage from './TrainingPage';
+import RegistryPage from './RegistryPage';
+import SubmitDataPage from './SubmitDataPage';
+import CliPage from './CliPage';
+import AuthStatus from './AuthStatus';
 import { apiPost } from '../utils/api';
 import { FaWallet, FaRocket, FaBrain, FaTrophy } from 'react-icons/fa';
-import { FiBarChart2, FiCpu, FiGitBranch, FiUploadCloud, FiHome, FiZap } from 'react-icons/fi';
+import { FiBarChart2, FiCpu, FiGitBranch, FiUploadCloud, FiHome, FiZap, FiGlobe, FiTerminal, FiSend } from 'react-icons/fi';
 
 const TABS = [
   { id: 'portfolio', label: 'Portfolio', Icon: FiHome },
   { id: 'studio', label: 'AI Studio', Icon: FiBarChart2 },
   { id: 'training', label: 'Consensus', Icon: FiGitBranch },
   { id: 'models', label: 'AI Models', Icon: FiCpu },
+  { id: 'registry', label: 'Registry', Icon: FiGlobe },
+  { id: 'submit', label: 'Submit Data', Icon: FiSend },
   { id: 'upload', label: 'Data Hub', Icon: FiUploadCloud },
   { id: 'agent', label: 'CLAWD Agent', Icon: FiZap },
   { id: 'mint', label: 'Mint Agent', Icon: FiZap },
   { id: 'ai-training', label: 'Training', Icon: FiBarChart2 },
+  { id: 'cli', label: 'CLI', Icon: FiTerminal },
 ];
 
+// Pages reachable without a wallet connection (public reads + info).
+const PUBLIC_TABS = [
+  { id: 'models', label: 'AI Models', Icon: FiCpu },
+  { id: 'registry', label: 'Registry', Icon: FiGlobe },
+  { id: 'submit', label: 'Submit Data', Icon: FiSend },
+  { id: 'cli', label: 'CLI', Icon: FiTerminal },
+];
+
+const TAB_PATHS = {
+  studio: '/studio',
+  mint: '/mint',
+  'ai-training': '/training',
+  models: '/models',
+  registry: '/registry',
+  submit: '/submit',
+  cli: '/cli',
+};
+
 function tabFromPath() {
-  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/studio')) {
-    return 'studio';
-  }
-  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/mint')) {
-    return 'mint';
-  }
-  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/training')) {
-    return 'ai-training';
-  }
-  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/models')) {
-    return 'models';
-  }
-  return 'portfolio';
+  if (typeof window === 'undefined') return 'portfolio';
+  const path = window.location.pathname;
+  const match = Object.entries(TAB_PATHS).find(([, p]) => path.startsWith(p));
+  return match ? match[0] : 'portfolio';
 }
 
 function Dashboard() {
@@ -62,17 +78,12 @@ function Dashboard() {
 
   const selectTab = useCallback((tabId) => {
     setActiveTab(tabId);
-    if (tabId === 'studio' && window.location.pathname !== '/studio') {
-      window.history.pushState({}, '', '/studio');
-    } else if (tabId === 'mint' && window.location.pathname !== '/mint') {
-      window.history.pushState({}, '', '/mint');
-    } else if (tabId === 'ai-training' && window.location.pathname !== '/training') {
-      window.history.pushState({}, '', '/training');
-    } else if (!['mint', 'studio', 'ai-training'].includes(tabId) && (
-      window.location.pathname.startsWith('/mint') ||
-      window.location.pathname.startsWith('/studio') ||
-      window.location.pathname.startsWith('/training')
-    )) {
+    const target = TAB_PATHS[tabId];
+    if (target) {
+      if (window.location.pathname !== target) {
+        window.history.pushState({}, '', target);
+      }
+    } else if (Object.values(TAB_PATHS).some((p) => window.location.pathname.startsWith(p))) {
       window.history.pushState({}, '', '/');
     }
   }, []);
@@ -123,28 +134,43 @@ function Dashboard() {
           <FaRocket size={32} color="#9945FF" />
           <h1 className="gradient-text" style={styles.title}>Train2Earn</h1>
         </div>
-        <WalletMultiButton />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <AuthStatus />
+          <WalletMultiButton />
+        </div>
       </header>
 
-      {/* Navbar (disconnected) — show models tab */}
+      {/* Navbar (disconnected) — public pages: models, registry, submit, CLI */}
       {!connected && (
         <div style={{...styles.tabBar, marginTop: '12px'}}>
-          <button
-            type="button"
-            style={{...styles.tab, ...(activeTab === 'models' ? styles.tabActive : {})}}
-            onClick={() => selectTab('models')}
-          >
-            <FiCpu size={16} />
-            AI Models
-          </button>
+          {PUBLIC_TABS.map(({ id, label, Icon }) => (
+            <button
+              key={id}
+              type="button"
+              style={{...styles.tab, ...(activeTab === id ? styles.tabActive : {})}}
+              onClick={() => selectTab(id)}
+            >
+              <Icon size={16} />
+              {label}
+            </button>
+          ))}
         </div>
       )}
 
       {/* AI Models (disconnected — public page) */}
       {!connected && activeTab === 'models' && <AIModels />}
 
+      {/* Omnichain Registry (disconnected — public page) */}
+      {!connected && activeTab === 'registry' && <RegistryPage />}
+
+      {/* Submit Data (disconnected — shows the connect prompt) */}
+      {!connected && activeTab === 'submit' && <SubmitDataPage />}
+
+      {/* Official CLI (disconnected — public page) */}
+      {!connected && activeTab === 'cli' && <CliPage />}
+
       {/* Hero (disconnected) */}
-      {!connected && activeTab !== 'mint' && activeTab !== 'studio' && activeTab !== 'models' && (
+      {!connected && !['mint', 'studio', 'models', 'registry', 'submit', 'cli'].includes(activeTab) && (
         <div style={styles.hero}>
           <FaBrain size={64} color="#14F195" style={styles.heroIcon} />
           <h2 style={styles.heroTitle}>
@@ -179,6 +205,42 @@ function Dashboard() {
               <p className="text-secondary">
                 Complete training milestones and earn CLAWD tokens based on your activity
               </p>
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginTop: '24px', textAlign: 'left' }}>
+            <div className="card" style={{ padding: '24px' }}>
+              <FiGlobe size={28} color="#14F195" />
+              <h3 style={{ ...styles.featureTitle, margin: '12px 0 8px' }}>Omnichain Model Registry</h3>
+              <p className="text-secondary" style={{ lineHeight: 1.6 }}>
+                Models from any chain register a signed manifest, anchored natively on
+                Solana — public, no holder gate, with verification tiers that say exactly
+                what has been checked.
+              </p>
+              <button type="button" className="btn btn-secondary mt-2" onClick={() => selectTab('registry')}>
+                Browse the registry
+              </button>
+            </div>
+            <div className="card" style={{ padding: '24px' }}>
+              <FiTerminal size={28} color="#9945FF" />
+              <h3 style={{ ...styles.featureTitle, margin: '12px 0 8px' }}>Official CLI</h3>
+              <p className="text-secondary" style={{ lineHeight: 1.6 }}>
+                Log in with a wallet signature, submit data in every form, upload, and
+                register models — all from your terminal. Keys never leave your machine.
+              </p>
+              <button type="button" className="btn btn-secondary mt-2" onClick={() => selectTab('cli')}>
+                Get the CLI
+              </button>
+            </div>
+            <div className="card" style={{ padding: '24px' }}>
+              <FiSend size={28} color="#FFD700" />
+              <h3 style={{ ...styles.featureTitle, margin: '12px 0 8px' }}>Submit any data form</h3>
+              <p className="text-secondary" style={{ lineHeight: 1.6 }}>
+                Text, image + caption pairs, video, bulk datasets, and robot episode data —
+                all rated by the same Jev engine, all earning to your wallet.
+              </p>
+              <button type="button" className="btn btn-secondary mt-2" onClick={() => selectTab('submit')}>
+                Submit data
+              </button>
             </div>
           </div>
           <HowItWorks />
@@ -296,6 +358,15 @@ function Dashboard() {
 
           {/* AI Models Tab */}
           {activeTab === 'models' && <AIModels />}
+
+          {/* Omnichain Registry Tab */}
+          {activeTab === 'registry' && <RegistryPage />}
+
+          {/* Submit Data Tab (all forms — Jev-2) */}
+          {activeTab === 'submit' && <SubmitDataPage />}
+
+          {/* Official CLI Tab */}
+          {activeTab === 'cli' && <CliPage />}
 
           {/* Arweave Upload Tab */}
           {activeTab === 'upload' && (

@@ -69,12 +69,30 @@ The upgraded engine rates **text, images + captions, video, bulk AI training dat
 
 | Path | What |
 |---|---|
-| `server/` | The live TrainToEarn backend (Jev rating, submissions, rewards, model registry store) |
+| `server/` | The live TrainToEarn backend (Jev rating, SIWS login, uploads, submissions, rewards, registry API, model registry store) |
+| `src/` | The earn.onchainai.fund frontend (registry browser, submit-any-form pages, CLI page, wallet login) |
+| `cli/` | The official `traintoearn` CLI — login, submit any data form, upload, register models, check rewards |
+| `hf-space/` | The Hugging Face submission Space app (Gradio) — a second front door to the same backend |
 | `programs/model-registry/` | The on-chain model registry program |
 | `skills/traintoearn-omnichain/` | The any-chain participation skill for agents |
 | `scripts/register-model.mjs` | The registry script — manifest → hash → Solana anchor payload |
 | `docs/` | Registry spec, Jev-2 spec, protocol + architecture docs |
 | `docs/PROJECT-README.md` | The original project README, preserved |
+
+## 🖥️ The official CLI
+
+```bash
+git clone https://github.com/Solizardking/train-to-earn && cd train-to-earn/cli
+npm install -g .
+traintoearn login --keypair ~/.config/solana/id.json   # signs a challenge locally; keys never leave your machine
+traintoearn submit text --file my-data.jsonl
+traintoearn submit dataset --manifest dataset.json     # async Jev-2 job, polled to completion
+traintoearn upload model.gguf --kind model
+traintoearn models register --manifest model.json --keypair ~/.config/solana/id.json
+traintoearn balance
+```
+
+Full command reference: **[cli/README.md](cli/README.md)**. Prefer a browser? The same flows live at [earn.onchainai.fund](https://earn.onchainai.fund) and on the Hugging Face Space (see `hf-space/`).
 
 ## 🧩 The ecosystem
 
@@ -90,7 +108,7 @@ Train To Earn is one organ of the Clawd stack — these public repos plug straig
 
 ## ✅ Honest status
 
-**Live today:** the TrainToEarn backend rating engine (`/api/jev/rate`), submissions + rewards ledgers, `/api/models/list`, and the earn.onchainai.fund app. **In spec (this repo):** the omnichain manifest + Solana anchoring rollout (Phase 0 = manifests + `registry.json` here; Phase 1 = registry API on the backend; Phase 2 = the anchor program) and the Jev-2 all-forms engine. Nothing here promises earnings — the ledger endpoints are the only source of truth.
+**Live today:** the TrainToEarn backend rating engine (`/api/jev/rate`), submissions + rewards ledgers, `/api/models/list`, and the earn.onchainai.fund app. **Built in this repo, deploying next:** wallet login (`/api/auth/*`), the registry API (`/api/registry/*`), Jev-2 all-forms rating (`/api/jev/rate-media`, `/api/jev/rate-dataset`, `/api/jev/jobs/:id`), authenticated uploads (`/api/uploads`), the registry browser + submit pages on the site, the official CLI, and the Hugging Face Space. **In spec:** the omnichain manifest + Solana anchoring rollout (Phase 0 = manifests + `registry.json` here; Phase 1 = registry API on the backend; Phase 2 = the anchor program). Nothing here promises earnings — the ledger endpoints are the only source of truth.
 
 *Public edition: a cleaned snapshot of the TrainToEarn codebase. The development archive stays private; no keys, keypairs, or caches are published here — see the exclusions in `.gitignore`.*
 
