@@ -25,6 +25,19 @@ import time
 import gradio as gr
 import requests
 
+try:
+    import spaces
+except ImportError:  # local runs / non-Spaces hosts: no GPU routing needed
+    spaces = None
+
+
+def _gpu(fn):
+    # ZeroGPU Spaces refuse to start unless at least one @spaces.GPU
+    # function is detected. This app is network-bound (all work is HTTP to
+    # the TrainToEarn backend), so one lightweight read handler carries the
+    # decorator; on CPU hosts the wrapper is a no-op.
+    return spaces.GPU(fn, duration=30) if spaces is not None else fn
+
 API_BASE = os.environ.get(
     "TRAINTOEARN_API", "https://traintoearn-backend-y6co.onrender.com"
 ).rstrip("/")
@@ -621,6 +634,7 @@ def register_model(manifest_text, signature):
 # Rewards tab
 # --------------------------------------------------------------------------
 
+@_gpu
 def rewards_lookup(wallet):
     wallet = (wallet or "").strip()
     if not wallet:
