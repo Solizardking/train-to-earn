@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "registry": "clawd-omnichain-model-registry",
+  "anchor_chain": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+  "models": []
+}

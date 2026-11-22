@@ -1,0 +1,92 @@
+services:
+  - type: web
+    name: traintoearn-backend
+    runtime: node
+    repo: https://github.com/Solizardking/traintoearn
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: npm install
+    startCommand: node server/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 5001
+      - key: DATABASE_URL
+        fromDatabase:
+          name: data_ri38
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - key: HELIUS_RPC_URL
+        sync: false
+      - key: HELIUS_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: SITE_URL
+        sync: false
+      - key: PUBLIC_API_URL
+        value: https://traintoearn-backend.onrender.com
+      - key: XAI_API_KEY
+        sync: false
+      - key: PINATA_JWT
+        sync: false
+      - key: PINATA_API_KEY
+        sync: false
+      - key: PINATA_API_SECRET
+        sync: false
+      - key: DYNAMIC_ENV_ID
+        value: 76e0eab2-2432-4489-ba9c-b82291cb23b9
+      - key: DYNAMIC_ORG_ID
+        value: 70d020b8-3063-45d2-8221-0df3fd611f11
+      - key: DYNAMIC_JWKS
+        value: https://app.dynamicauth.com/api/v0/sdk/76e0eab2-2432-4489-ba9c-b82291cb23b9/.well-known/jwks
+      - key: DYNAMIC_MIN_API_VERSION
+        value: 2026_04_01
+      # Phantom Server SDK (custodial wallets) — secrets, set in Render dashboard.
+      # Leave unset to keep the Phantom endpoints dormant (they return 503).
+      - key: PHANTOM_ORG_ID
+        sync: false
+      - key: PHANTOM_PRIVATE_KEY
+        sync: false
+      - key: PHANTOM_APP_ID
+        sync: false
+      - key: CLAWD_ZK_RPC_URL
+        sync: false
+      - key: CLAWD_ZK_PHOTON_URL
+        sync: false
+      - key: CLAWD_ZK_NETWORK
+        value: mainnet
+      - key: CLAWD_FREE_CHAT_URL
+        value: https://zk.x402.wtf/free
+      - key: CLAWD_FREE_CHAT_API_URL
+        value: https://zk.x402.wtf/api/free/chat
+      - key: METAPLEX_AGENT_API_BASE_URL
+        value: https://api.metaplex.com
+      - key: CLAWDBOT_SKILLS_DIR
+        sync: false
+      - key: CLAWDBOT_AGENTS_DIR
+        sync: false
+      - key: CLAWDBOT_ZK_PRIMITIVES_DIR
+        sync: false
+      - key: VITE_CLAWD_MINT
+        value: 8cHzQHUS2s2h8TzCmfqPKYiM4dSt4roa3n7MyRLApump
+      - key: VITE_TREASURY_ADDRESS
+        value: EDCdUyLtCTjg2xC8VXLB2GmPPcVUNXrpDGEgQm8VATgk
+      - key: VITE_ARWEAVE_GATEWAY
+        value: https://arweave.net
+      - key: VITE_IPFS_GATEWAY
+        value: https://cloudflare-ipfs.com/ipfs/
+
+databases:
+  - name: data_ri38
+    databaseName: data_ri38
+    user: data_ri38_user
+    plan: free
+    region: oregon
+    ipAllowList: []

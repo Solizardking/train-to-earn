@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+
+# Source control
+.git/
+.gitattributes
+.gitignore
+.gitmodules
+
+# Environment
+.env
+.env.local
+.env.production
+.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Arweave (heavy source dep)
+arweave/
+
+# Solana programs (compiled via CI)
+programs/
+target/
+
+# Docs
+docs/
+Building an On-Chain AI Protocol for Solana 2/
+
+# Test files
+test/
+test-ledger/
+scripts/
+
+# Build output (Vite generates this)
+dist/
+
+# Training directory (served via backend API)
+training/
+
+# Other artifacts
+*.log
+coverage/

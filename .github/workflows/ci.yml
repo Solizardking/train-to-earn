@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+        env:
+          VITE_API_URL: http://localhost:5001
+          VITE_CLAWD_MINT: 8cHzQHUS2s2h8TzCmfqPKYiM4dSt4roa3n7MyRLApump
+          VITE_TREASURY_ADDRESS: EDCdUyLtCTjg2xC8VXLB2GmPPcVUNXrpDGEgQm8VATgk
+          VITE_ARWEAVE_GATEWAY: https://arweave.net
+          VITE_IPFS_GATEWAY: https://cloudflare-ipfs.com/ipfs/
+
+      - name: Check for secrets in source
+        run: |
+          if grep -rE "(sk-or-v1-|xai-[a-zA-Z0-9]{20,}|eyJhbGciOiJIUzI1NiI)" \
+            src/ server/ programs/ --include="*.js" --include="*.jsx" --include="*.ts" --include="*.rs"; then
+            echo "Potential secret found in source files!"
+            exit 1
+          fi
+          echo "No secrets found."

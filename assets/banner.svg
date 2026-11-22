@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9945FF"/>
+      <stop offset="100%" stop-color="#14F195"/>
+      <animate attributeName="x1" values="0%;100%;0%" dur="9s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="100%;0%;100%" dur="9s" repeatCount="indefinite"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="300" fill="#0a0a12"/>
+  <circle cx="1080" cy="60" r="26" fill="#14F195" opacity="0.5">
+    <animate attributeName="r" values="26;34;26" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0.15;0.5" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="90" cy="240" r="16" fill="#9945FF" opacity="0.5">
+    <animate attributeName="r" values="16;24;16" dur="4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0.15;0.5" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <text x="600" y="118" text-anchor="middle" font-family="monospace" font-size="64" font-weight="bold" fill="url(#g)">TRAIN TO EARN</text>
+  <text x="600" y="168" text-anchor="middle" font-family="monospace" font-size="24" fill="#ededed">Omnichain AI training + model registry — anchored on Solana</text>
+  <text x="600" y="216" text-anchor="middle" font-family="monospace" font-size="19" fill="#9a9ab0">Submit data from any chain · Get rated by Jev · Earn $CLAWD · Register your model</text>
+  <text x="600" y="262" text-anchor="middle" font-size="30">🦞</text>
+</svg>

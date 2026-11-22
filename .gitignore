@@ -1,0 +1,72 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
+.env.*
+!.env.example
+Building an On-Chain AI Protocol for Solana 2
+# Build output and caches
+dist/
+target/
+.mypy_cache/
+arweave-js-master
+
+# Local tool output
+.playwright-mcp/
+.codex-ai-training-docs/
+.codex-model-kit-sync/
+outputs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Coverage
+coverage/
+.vercel
+arweave-js-master/
+Building an On-Chain AI Protocol for Solana 2/.env
+
+# Accidental nested project clone
+/traintoearn/
+
+# Training symlinks — the symlinks themselves are tracked; contents live under /Users/8bit/drive/nemo-clawd/
+# The gitignores below cover cache/build dirs inside those symlinked dirs:
+training/.hf/
+training/data/incoming/
+training/data/processed/
+training/data/model_kit/
+training/data/core_ai_processed/
+training/data/nvidia_rag_store/
+training/data/nvidia_training_factory_processed/
+training/data/realtime_research_processed/
+training/data/tx_foundation_cpt_processed/
+training/data/perps/
+training/data/strategies/
+training-data/corpus/
+training-data/eval/
+training-data/manifests/
+training-data/preference/
+training-data/reports/
+training-data/sft/
+training-data/source_notes/
+
+# Public-edition exclusions (cleaned snapshot rule)
+test-ledger/
+.npm-cache/
+.mypy_cache/
+.playwright-mcp/
+.DS_Store
+.env
